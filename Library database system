@@ -1,0 +1,72 @@
+-- Create the Authors table
+CREATE TABLE Authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    birthdate DATE
+);
+
+-- Create the Categories table
+CREATE TABLE Categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- Create the Books table
+CREATE TABLE Books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    published_year INT,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+);
+
+-- Create a junction table for Books and Authors (Many-to-Many relationship)
+CREATE TABLE Book_Authors (
+    book_id INT,
+    author_id INT,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id),
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+);
+
+-- Create the Members table
+CREATE TABLE Members (
+    member_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(15)
+);
+
+-- Create the Borrowing Records table
+CREATE TABLE Borrowing_Records (
+    record_id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT,
+    member_id INT,
+    borrow_date DATE NOT NULL,
+    return_date DATE,
+    FOREIGN KEY (book_id) REFERENCES Books(book_id),
+    FOREIGN KEY (member_id) REFERENCES Members(member_id)
+);
+-- Insert sample data for Categories
+INSERT INTO Categories (name) VALUES ('Fiction'), ('Non-Fiction'), ('Science');
+
+-- Insert sample data for Authors
+INSERT INTO Authors (name, birthdate) VALUES ('J.K. Rowling', '1965-07-31'), ('Isaac Asimov', '1920-01-02');
+
+-- Insert sample data for Books
+INSERT INTO Books (title, published_year, category_id) 
+VALUES ('Harry Potter and the Philosopher\'s Stone', 1997, 1),
+       ('Foundation', 1951, 3);
+
+-- Link Books and Authors in the Book_Authors table (Many-to-Many relationship)
+INSERT INTO Book_Authors (book_id, author_id) 
+VALUES (1, 1), (2, 2);
+
+-- Insert sample Members
+INSERT INTO Members (name, email, phone_number) 
+VALUES ('Alice Smith', 'alice@email.com', '123-456-7890'),
+       ('Bob Johnson', 'bob@email.com', '987-654-3210');
+
+-- Record a Borrowing Action
+INSERT INTO Borrowing_Records (book_id, member_id, borrow_date) 
+VALUES (1, 1, '2025-05-15');
